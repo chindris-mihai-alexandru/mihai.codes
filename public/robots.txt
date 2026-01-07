@@ -1,0 +1,15 @@
+# robots.txt for mihai.codes
+# https://developers.google.com/search/docs/crawling-indexing/robots/intro
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://mihai.codes/sitemap.xml
+
+# Block common bot spam paths (these don't exist but prevent log noise)
+Disallow: /wp-admin/
+Disallow: /wp-content/
+Disallow: /wp-includes/
+Disallow: /.env
+Disallow: /config/
