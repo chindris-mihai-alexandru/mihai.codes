@@ -4,3 +4,6 @@ dist/
 *.local
 tsconfig.tsbuildinfo
 bun.lock
+
+# Tool caches
+.agent2linear/
