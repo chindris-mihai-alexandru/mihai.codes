@@ -14,6 +14,7 @@ export const ThemeToggle = component$(() => {
       class="p-2 rounded-lg border border-border hover:border-accent transition-colors"
       title={`Current: ${theme.value}. Click to change.`}
       aria-label="Toggle theme"
+      data-theme-toggle
     >
       {/* Sun icon - shown in dark mode */}
       <svg
