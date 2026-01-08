@@ -113,9 +113,31 @@ export default component$(() => {
         </section>
       </main>
 
-      <footer class="mt-24 pt-8 border-t border-border text-center text-text-secondary text-sm font-mono">
-        <p>Built with Qwik & Tailwind CSS</p>
-        <p class="mt-2">&copy; 2026 Mihai Chindriș</p>
+      <footer class="mt-24 pt-8 border-t border-border text-text-secondary text-sm font-mono">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+          <div class="flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-1">
+            <span>Built with Qwik & Tailwind CSS</span>
+            <span class="hidden md:inline">·</span>
+            <span>Deployed on Cloudflare Pages</span>
+          </div>
+          <div class="flex justify-center md:justify-end gap-4">
+            <a
+              href="https://github.com/chindris-mihai-alexandru/mihai.codes"
+              target="_blank"
+              class="text-accent hover:underline"
+            >
+              Source
+            </a>
+            <a
+              href="https://github.com/chindris-mihai-alexandru/mihai.codes/blob/main/LICENSE"
+              target="_blank"
+              class="text-accent hover:underline"
+            >
+              MIT License
+            </a>
+          </div>
+        </div>
+        <p class="mt-4 text-center">&copy; {new Date().getFullYear()} Mihai Chindriș</p>
       </footer>
     </div>
   );
