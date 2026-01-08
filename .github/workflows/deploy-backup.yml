@@ -32,17 +32,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Qwik site for static hosting
-        run: npm run build
+      - name: Build client
+        run: npm run build.client
+
+      - name: Build static site for GitHub Pages
+        run: npx vite build -c adapters/static/vite.config.ts
         env:
-          # For GitHub Pages subdirectory hosting
           ORIGIN: https://chindris-mihai-alexandru.github.io
-          BASE: /mihai.codes/
+
+      - name: Add .nojekyll file
+        run: touch dist/mihai.codes/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./dist/mihai.codes
 
   deploy:
     environment:
