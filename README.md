@@ -2,6 +2,9 @@
 
 Personal portfolio and blog built with modern web technologies.
 
+[![CI](https://github.com/chindris-mihai-alexandru/mihai.codes/actions/workflows/ci.yml/badge.svg)](https://github.com/chindris-mihai-alexandru/mihai.codes/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/chindris-mihai-alexandru/mihai.codes/graph/badge.svg)](https://codecov.io/gh/chindris-mihai-alexandru/mihai.codes)
+
 [![Qwik](https://img.shields.io/badge/Qwik-000000?style=flat-square&logo=qwik&logoColor=white)](https://qwik.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Cloudflare Pages](https://img.shields.io/badge/Cloudflare_Pages-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://pages.cloudflare.com)
@@ -51,6 +54,13 @@ src/
     ├── index.tsx   # Home page
     └── blog/       # Blog routes
 ```
+
+## Development Workflow
+
+- **Branch**: `main` only - simple single-branch workflow
+- **CI**: All pushes run lint, typecheck, tests, and build via GitHub Actions
+- **Branch Protection**: CI must pass before merging PRs
+- **Tags**: Milestone-based (e.g., `phase2-complete`), not semantic versioning
 
 ## License
 
