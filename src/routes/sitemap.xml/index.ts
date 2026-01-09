@@ -5,12 +5,20 @@
  * @see https://www.sitemaps.org/protocol.html
  */
 import type { RequestHandler } from '@builder.io/qwik-city';
-import { getAllPosts } from '../../lib/sanity';
+import { getAllPosts, type BlogPost } from '../../lib/sanity';
 
 const BASE_URL = 'https://mihai.codes';
 
 export const onGet: RequestHandler = async ({ send }) => {
-  const posts = await getAllPosts();
+  let posts: BlogPost[] = [];
+  
+  try {
+    posts = await getAllPosts();
+  } catch (error) {
+    console.error('Sitemap: Failed to fetch posts from Sanity:', error);
+    // Continue with empty posts array - sitemap will still have static pages
+  }
+  
   const now = new Date().toISOString().split('T')[0];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

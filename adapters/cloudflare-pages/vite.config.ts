@@ -11,7 +11,13 @@ export default extendConfig(baseConfig, () => {
       },
     },
     plugins: [
-      cloudflarePagesAdapter(),
+      cloudflarePagesAdapter({
+        ssg: {
+          include: ['/*'],
+          exclude: ['/sitemap.xml', '/blog/*'],
+          origin: 'https://mihai.codes',
+        },
+      }),
     ],
   };
 });
