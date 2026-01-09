@@ -7,22 +7,29 @@ interface CredlyBadgeProps {
 }
 
 /**
- * Credly Badge component
+ * Credly Badge component using iframe embed
  * 
- * Renders the badge container with data attributes.
- * The Credly embed script is loaded in root.tsx and will automatically
- * find and render badges with data-share-badge-id attributes.
+ * Uses Credly's iframe embed URL directly instead of relying on their
+ * JavaScript embed script, which has timing issues on SSG pages.
+ * The iframe loads the badge directly from Credly's servers.
  */
 export const CredlyBadge = component$<CredlyBadgeProps>(
   ({ badgeId, width = 150, height = 270 }) => {
+    // Direct iframe URL for Credly badge
+    const iframeSrc = `https://www.credly.com/badges/${badgeId}/embedded`;
+    
     return (
-      <div
-        data-iframe-width={width}
-        data-iframe-height={height}
-        data-share-badge-id={badgeId}
-        data-share-badge-host="https://www.credly.com"
-        class="credly-badge"
-      />
+      <div class="credly-badge">
+        <iframe
+          src={iframeSrc}
+          width={width}
+          height={height}
+          frameBorder="0"
+          allowFullscreen
+          title="Credly Badge"
+          style={{ border: 'none', overflow: 'hidden' }}
+        />
+      </div>
     );
   }
 );

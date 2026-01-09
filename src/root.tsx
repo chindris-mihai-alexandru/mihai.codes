@@ -5,7 +5,8 @@ import { ThemeProvider } from './context/theme';
 
 import './global.css';
 
-// Inline script ONLY for preventing FOUC - theme toggle handled by Qwik
+// Inline script for theme handling - works without Qwik hydration
+// This is the ONLY theme code that runs - handles both FOUC prevention AND toggle clicks
 const themeScript = `
 (function() {
   var STORAGE_KEY = 'mihai-codes-theme';
@@ -16,14 +17,31 @@ const themeScript = `
   document.documentElement.classList.remove('light', 'dark');
   document.documentElement.classList.add(theme);
   
-  // Store for Qwik context to read
+  // Store current theme
   window.__theme = theme;
+  
+  // Global theme setter
   window.__setTheme = function(t) {
     window.__theme = t;
     localStorage.setItem(STORAGE_KEY, t);
     document.documentElement.classList.remove('light', 'dark');
     document.documentElement.classList.add(t);
   };
+  
+  // Toggle function for the button
+  window.__toggleTheme = function() {
+    var newTheme = window.__theme === 'dark' ? 'light' : 'dark';
+    window.__setTheme(newTheme);
+  };
+  
+  // Attach click handler to theme toggle button after DOM is ready
+  // This works on SSG pages without Qwik hydration
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.querySelector('[data-theme-toggle]');
+    if (btn) {
+      btn.addEventListener('click', window.__toggleTheme);
+    }
+  });
 })();
 `;
 
@@ -42,11 +60,7 @@ export default component$(() => {
         <ThemeProvider>
           <RouterOutlet />
         </ThemeProvider>
-        {/* Third-party embed scripts - load after body content, auto-find badge elements */}
-        <script
-          async
-          src="https://cdn.credly.com/assets/utilities/embed.js"
-        />
+        {/* LinkedIn embed script - auto-finds badge elements after page load */}
         <script
           async
           src="https://platform.linkedin.com/badges/js/profile.js"

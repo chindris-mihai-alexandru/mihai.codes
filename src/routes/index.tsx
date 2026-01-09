@@ -3,7 +3,7 @@ import { Link, routeLoader$ } from '@builder.io/qwik-city';
 import { profile } from '../data/profile';
 import { ThemeToggle } from '../components/theme-toggle/theme-toggle';
 import { CredlyBadge } from '../components/credly-badge/credly-badge';
-import { LinkedInBadge } from '../components/linkedin-badge/linkedin-badge';
+import { LinkedInWidget } from '../components/linkedin-badge/linkedin-badge';
 import { GitHubWidget, type GitHubUser } from '../components/github-widget/github-widget';
 
 // Fetch GitHub data at build time (SSG) or request time (SSR)
@@ -112,7 +112,11 @@ export default component$(() => {
               <GitHubWidget username="chindris-mihai-alexandru" userData={githubData.value} />
             </div>
             <div class="modal-card p-4 rounded-lg">
-              <LinkedInBadge profileId="mihai-chindris" size="medium" />
+              <LinkedInWidget 
+                profileId="mihai-chindris" 
+                name="Mihai Chindriș"
+                headline="Aspiring APM | SWE Student @Quantic"
+              />
             </div>
           </div>
           <div class="mt-6">

@@ -1,53 +1,86 @@
-import { component$, useContext } from '@builder.io/qwik';
-import { ThemeContext } from '../../context/theme';
+import { component$ } from '@builder.io/qwik';
 
-type BadgeSize = 'small' | 'medium' | 'large';
-
-interface LinkedInBadgeProps {
+interface LinkedInWidgetProps {
   /** LinkedIn profile URL path (e.g., "mihai-chindris") */
   profileId: string;
-  /** Badge size variant */
-  size?: BadgeSize;
+  /** Display name */
+  name: string;
+  /** Headline/title */
+  headline?: string;
+  /** Profile image URL (optional - uses LinkedIn default if not provided) */
+  imageUrl?: string;
 }
 
-const BADGE_SIZES: Record<BadgeSize, { width: string; height: string }> = {
-  small: { width: '110', height: '22' },
-  medium: { width: '160', height: '30' },
-  large: { width: '200', height: '71' },
-};
-
 /**
- * LinkedIn Profile Badge component.
+ * LinkedIn Profile Widget
  * 
- * The LinkedIn embed script is loaded in root.tsx and auto-discovers
- * elements with the LI-profile-badge class and data attributes.
- * This approach works reliably with SSG since the script runs after
- * the page loads, finding the badge elements in the static HTML.
+ * A custom card component that displays LinkedIn profile information
+ * in a style matching the GitHub widget. Since LinkedIn doesn't have
+ * a public API, the profile data is passed as props.
  */
-export const LinkedInBadge = component$<LinkedInBadgeProps>(
-  ({ profileId, size = 'medium' }) => {
-    const theme = useContext(ThemeContext);
-    const dimensions = BADGE_SIZES[size];
-
+export const LinkedInWidget = component$<LinkedInWidgetProps>(
+  ({ profileId, name, headline, imageUrl }) => {
+    const profileUrl = `https://www.linkedin.com/in/${profileId}`;
+    
+    // Default LinkedIn icon if no image provided
+    const displayImage = imageUrl || `https://static.licdn.com/aero-v1/sc/h/9c8pery4andzj6ohjkjp54ma2`;
+    
     return (
-      <div
-        class="badge-base LI-profile-badge"
-        data-locale="en_US"
-        data-size={size}
-        data-theme={theme.value}
-        data-type="HORIZONTAL"
-        data-vanity={profileId}
-        data-version="v1"
-        style={{ width: `${dimensions.width}px` }}
-      >
+      <div class="linkedin-widget">
         <a
-          class="badge-base__link LI-simple-link"
-          href={`https://www.linkedin.com/in/${profileId}?trk=profile-badge`}
+          href={profileUrl}
           target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-4 group"
         >
-          View LinkedIn Profile
+          {/* Profile image or LinkedIn icon */}
+          <div class="w-16 h-16 rounded-full border-2 border-border group-hover:border-accent transition-colors overflow-hidden flex items-center justify-center bg-[#0A66C2]">
+            {imageUrl ? (
+              <img
+                src={displayImage}
+                alt={name}
+                width={64}
+                height={64}
+                class="w-full h-full object-cover"
+              />
+            ) : (
+              // LinkedIn logo icon when no profile image
+              <svg
+                class="w-8 h-8 text-white"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            )}
+          </div>
+          
+          {/* Profile info */}
+          <div>
+            <div class="font-bold group-hover:text-accent transition-colors">
+              {name}
+            </div>
+            <div class="text-sm text-text-secondary font-mono">
+              LinkedIn
+            </div>
+            {headline && (
+              <div class="text-xs text-text-secondary mt-1 max-w-[200px] truncate">
+                {headline}
+              </div>
+            )}
+            <div class="flex items-center gap-1 mt-2 text-xs text-[#0A66C2] font-medium">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+              <span>View Profile</span>
+            </div>
+          </div>
         </a>
       </div>
     );
   }
 );
+
+// Keep the old badge component for backward compatibility
+// but it relies on LinkedIn's embed script which may not work on SSG
+export { LinkedInWidget as LinkedInBadge };

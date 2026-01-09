@@ -4,7 +4,6 @@ import {
   Slot,
   useContextProvider,
   useSignal,
-  useVisibleTask$,
   type Signal,
 } from '@builder.io/qwik';
 
@@ -12,48 +11,21 @@ export type Theme = 'light' | 'dark';
 
 export const ThemeContext = createContextId<Signal<Theme>>('theme-context');
 
-const STORAGE_KEY = 'mihai-codes-theme';
-
-declare global {
-  interface Window {
-    __theme?: string;
-    __setTheme?: (theme: string) => void;
-  }
-}
-
+/**
+ * Theme Provider Component
+ * 
+ * Provides theme context for components that need to read the current theme.
+ * The actual theme management (storage, DOM updates, toggle) is handled by
+ * the inline script in root.tsx which works without Qwik hydration.
+ * 
+ * This context is useful for:
+ * - Components that need to conditionally render based on theme
+ * - Third-party widgets that need theme-aware styling
+ */
 export const ThemeProvider = component$(() => {
+  // Default to dark - the actual theme is applied by the inline script in root.tsx
+  // This is just for Qwik context consumers that might need it
   const theme = useSignal<Theme>('dark');
-
-  // Sync with the inline script's theme on hydration
-  // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(
-    () => {
-      // Read from window.__theme set by inline script, or localStorage
-      const currentTheme = (window.__theme as Theme) || 
-        (localStorage.getItem(STORAGE_KEY) as Theme) || 
-        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      
-      if (currentTheme !== theme.value) {
-        theme.value = currentTheme;
-      }
-    },
-    { strategy: 'document-ready' }
-  );
-
-  // Watch for theme changes and apply to DOM
-  // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(({ track }) => {
-    const currentTheme = track(() => theme.value);
-    // Use the global setter if available
-    if (window.__setTheme) {
-      window.__setTheme(currentTheme);
-    } else {
-      // Fallback: apply directly
-      localStorage.setItem(STORAGE_KEY, currentTheme);
-      document.documentElement.classList.remove('light', 'dark');
-      document.documentElement.classList.add(currentTheme);
-    }
-  });
 
   useContextProvider(ThemeContext, theme);
 

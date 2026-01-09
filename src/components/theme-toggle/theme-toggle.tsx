@@ -1,31 +1,20 @@
-import { $, component$, useContext } from '@builder.io/qwik';
-import { ThemeContext } from '../../context/theme';
+import { component$ } from '@builder.io/qwik';
 
-declare global {
-  interface Window {
-    __theme?: string;
-    __setTheme?: (theme: string) => void;
-  }
-}
-
+/**
+ * Theme Toggle Button
+ * 
+ * This component renders a button that toggles between light and dark themes.
+ * The actual click handling is done by native JavaScript in root.tsx (themeScript)
+ * which attaches an event listener to [data-theme-toggle] on DOMContentLoaded.
+ * 
+ * This approach works reliably on SSG pages where Qwik's onClick$ handlers
+ * may not fire due to incomplete hydration.
+ */
 export const ThemeToggle = component$(() => {
-  const theme = useContext(ThemeContext);
-
-  const handleClick = $(() => {
-    const newTheme = theme.value === 'dark' ? 'light' : 'dark';
-    // Update Qwik context
-    theme.value = newTheme;
-    // Also call the global setter for immediate DOM update
-    if (typeof window !== 'undefined' && window.__setTheme) {
-      window.__setTheme(newTheme);
-    }
-  });
-
   return (
     <button
-      onClick$={handleClick}
       class="p-2 rounded-lg border border-border hover:border-accent transition-colors"
-      title={`Switch to ${theme.value === 'dark' ? 'light' : 'dark'} mode`}
+      title="Toggle theme"
       aria-label="Toggle theme"
       data-theme-toggle
     >
