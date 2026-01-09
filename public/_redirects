@@ -1,3 +1,3 @@
 # Cloudflare Pages redirects
-# Add redirects here as needed
-# /old-path /new-path 301
+# Note: /rss.xml and /sitemap.xml are SSR routes that work with GET requests
+# HEAD requests may return 404 due to Qwik's endpoint handling (browsers use GET)
