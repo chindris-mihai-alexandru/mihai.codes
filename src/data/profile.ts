@@ -82,19 +82,22 @@ export const profile = {
       name: "EasyParkPlus",
       role: "Enterprise Parking & EV Charging Architecture",
       date: "Oct 2025",
-      description: "Enterprise software development project converting an existing parking prototype into a scalable multi-facility system with EV charging. Implemented Domain-Driven Design and microservices."
+      description: "Enterprise software development project converting an existing parking prototype into a scalable multi-facility system with EV charging. Implemented Domain-Driven Design and microservices.",
+      url: "https://github.com/heshamsakr/EasyParkPlus-Refactor"
     },
     {
       name: "Café Fausse",
       role: "Full-Stack Restaurant Web Application",
       date: "Sep 2025",
-      description: "Full-stack fine dining restaurant web app. Intelligent reservation engine with dynamic table allotment."
+      description: "Full-stack fine dining restaurant web app. Intelligent reservation engine with dynamic table allotment.",
+      url: "https://chindris-mihai-alexandru.github.io/cafe-fausse/"
     },
     {
       name: "Lily's Florist Shop",
       role: "Design & Requirements",
       date: "Jul 2025",
-      description: "Developed user stories, mapped user journeys, and translated customer needs into requirements. Created Figma wireframes."
+      description: "Developed user stories, mapped user journeys, and translated customer needs into requirements. Created Figma wireframes.",
+      url: "https://www.figma.com/design/cDdidMI5ehr2Lgp7htOpar/Lily-s-Florist-Shop-Mockup-Wireframes?node-id=0-1&p=f"
     }
   ]
 };

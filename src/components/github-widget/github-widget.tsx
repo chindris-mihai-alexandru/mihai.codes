@@ -34,16 +34,18 @@ export const GitHubWidget = component$<GitHubWidgetProps>(({ username, userData 
           href={userData.html_url}
           target="_blank"
           rel="noopener noreferrer"
-          class="flex items-center gap-4 group"
+          class="flex flex-col sm:flex-row items-center sm:items-start gap-4 group text-center sm:text-left"
         >
           <img
             src={userData.avatar_url}
             alt={userData.name || userData.login}
             width={64}
             height={64}
-            class="rounded-full border-2 border-border group-hover:border-accent transition-colors"
+            loading="lazy"
+            decoding="async"
+            class="rounded-full border-2 border-border group-hover:border-accent transition-colors flex-shrink-0"
           />
-          <div>
+          <div class="min-w-0">
             <div class="font-bold group-hover:text-accent transition-colors">
               {userData.name || userData.login}
             </div>
@@ -53,7 +55,7 @@ export const GitHubWidget = component$<GitHubWidgetProps>(({ username, userData 
                 {userData.bio}
               </div>
             )}
-            <div class="flex gap-4 mt-2 text-xs text-text-secondary font-mono">
+            <div class="flex justify-center sm:justify-start gap-4 mt-2 text-xs text-text-secondary font-mono">
               <span>{userData.public_repos} repos</span>
               <span>{userData.followers} followers</span>
             </div>

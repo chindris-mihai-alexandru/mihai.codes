@@ -70,11 +70,27 @@ export default component$(() => {
           <h2 class="text-2xl font-bold mb-6 border-b border-border pb-2">Projects</h2>
           <div class="grid md:grid-cols-2 gap-6">
             {profile.projects.map((project, i) => (
-              <div key={i} class="modal-card p-6 rounded-lg">
-                <h3 class="text-lg font-bold mb-2">{project.name}</h3>
+              <a
+                key={i}
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="modal-card p-6 rounded-lg group cursor-pointer hover:border-accent transition-all duration-200 hover:-translate-y-1 block"
+              >
+                <div class="flex justify-between items-start mb-2">
+                  <h3 class="text-lg font-bold group-hover:text-accent transition-colors">{project.name}</h3>
+                  <svg 
+                    class="w-4 h-4 text-text-secondary group-hover:text-accent transition-colors flex-shrink-0 mt-1" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
                 <p class="text-xs font-mono text-text-secondary mb-3">{project.role}</p>
                 <p class="text-sm text-text-secondary">{project.description}</p>
-              </div>
+              </a>
             ))}
           </div>
         </section>
@@ -119,6 +135,7 @@ export default component$(() => {
                 profileId="mihai-chindris" 
                 name="Mihai Chindriș"
                 headline="Aspiring APM | SWE Student @Quantic"
+                imageUrl="/images/linkedin-photo.webp"
               />
             </div>
           </div>
