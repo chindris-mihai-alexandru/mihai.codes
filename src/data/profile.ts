@@ -13,22 +13,22 @@ export const profile = {
   },
   education: [
     {
-      school: "Quantic School of Business and Technology",
-      degree: "Master's degree, Computer Software Engineering",
+      school: "Quantic School of Business & Technology",
+      degree: "M.S. Software Engineering",
       date: "2025 - 2026",
-      details: "Advanced software methodologies, Requirements gathering, Design thinking, Modern frameworks, Cloud architectures."
+      status: "In Progress",
+      details: "AI-focused program covering machine learning, cloud architectures, microservices, and technical leadership.",
+      logo: "/images/quantic-logo.png",
+      url: "https://quantic.edu/ms-software-engineering/"
     },
     {
-      school: "Universitatea „Babeș-Bolyai” din Cluj-Napoca",
-      degree: "Master's degree, Databases (Incomplete)",
-      date: "2020 - 2022",
-      details: "Trainings on IaaS, Private Cloud & Virtualization + Azure Architecture & Automation."
-    },
-    {
-      school: "Technical University of Cluj Napoca",
-      degree: "Bachelor's degree, Economic Informatics",
+      school: "Technical University of Cluj-Napoca",
+      degree: "B.A. Economic Informatics",
       date: "2017 - 2020",
-      details: "8.07 out of 10. Thesis focused on responsive web app for hometown library."
+      status: "Completed",
+      details: "Thesis focused on developing a responsive web application for a hometown library.",
+      logo: "/images/utcn-logo.png",
+      url: "https://www.utcluj.ro/"
     }
   ],
   experience: {

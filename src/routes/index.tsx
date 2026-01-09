@@ -106,6 +106,44 @@ export default component$(() => {
         </section>
 
         <section>
+          <h2 class="text-2xl font-bold mb-6 border-b border-border pb-2">Education</h2>
+          <div class="space-y-4">
+            {profile.education.map((edu, i) => (
+              <a
+                key={i}
+                href={edu.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="modal-card p-5 rounded-lg flex items-start gap-4 group cursor-pointer hover:border-accent transition-all duration-200 block"
+              >
+                <img 
+                  src={edu.logo} 
+                  alt={edu.school}
+                  width={40}
+                  height={40}
+                  class="w-10 h-10 object-contain flex-shrink-0 mt-1"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div class="flex-1 min-w-0">
+                  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
+                    <h3 class="text-lg font-semibold group-hover:text-accent transition-colors">{edu.school}</h3>
+                    <span class="text-xs font-mono text-text-secondary whitespace-nowrap">{edu.date}</span>
+                  </div>
+                  <p class="text-sm font-mono text-accent">{edu.degree}</p>
+                  {edu.status === "In Progress" && (
+                    <span class="inline-block text-xs font-mono bg-accent/10 text-accent px-2 py-0.5 rounded mt-1">
+                      In Progress
+                    </span>
+                  )}
+                  <p class="text-sm text-text-secondary mt-2">{edu.details}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section>
           <h2 class="text-2xl font-bold mb-6 border-b border-border pb-2">Projects</h2>
           <div class="grid md:grid-cols-2 gap-6">
             {profile.projects.map((project, i) => (
