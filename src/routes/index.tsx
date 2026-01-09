@@ -2,23 +2,7 @@ import { component$ } from '@builder.io/qwik';
 import { Link, routeLoader$ } from '@builder.io/qwik-city';
 import { profile } from '../data/profile';
 import { CredlyBadge, fetchCredlyBadge, type CredlyBadgeData } from '../components/credly-badge/credly-badge';
-import { LinkedInWidget } from '../components/linkedin-badge/linkedin-badge';
-import { GitHubWidget, type GitHubUser } from '../components/github-widget/github-widget';
-
-// Fetch GitHub data at build time (SSG) or request time (SSR)
-export const useGitHubData = routeLoader$<GitHubUser | null>(async () => {
-  try {
-    const response = await fetch('https://api.github.com/users/chindris-mihai-alexandru');
-    if (!response.ok) {
-      console.error('GitHub API error:', response.status);
-      return null;
-    }
-    return (await response.json()) as GitHubUser;
-  } catch (error) {
-    console.error('Failed to fetch GitHub data:', error);
-    return null;
-  }
-});
+import { SocialLinks } from '../components/social-links/social-links';
 
 // Fetch Credly badge data at build time (SSG) or request time (SSR)
 export const useCredlyBadge = routeLoader$<CredlyBadgeData | null>(async () => {
@@ -27,7 +11,6 @@ export const useCredlyBadge = routeLoader$<CredlyBadgeData | null>(async () => {
 });
 
 export default component$(() => {
-  const githubData = useGitHubData();
   const credlyBadge = useCredlyBadge();
   return (
     <div class="min-h-screen p-8 md:p-16 max-w-4xl mx-auto">
@@ -182,30 +165,17 @@ export default component$(() => {
 
         <section>
           <h2 class="text-2xl font-bold mb-6 border-b border-border pb-2">Connect</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center sm:justify-items-start">
-            <div class="modal-card p-4 rounded-lg">
-              <GitHubWidget username="chindris-mihai-alexandru" userData={githubData.value} />
-            </div>
-            <div class="modal-card p-4 rounded-lg">
-              <LinkedInWidget 
-                profileId="mihai-chindris" 
-                name="Mihai Chindriș"
-                headline="Aspiring APM | SWE Student @Quantic"
-                imageUrl="/images/linkedin-photo.webp"
-              />
-            </div>
-          </div>
-          <div class="mt-6">
-            <p class="text-text-secondary font-mono text-sm">
-              Or reach out directly:{' '}
-              <a
-                href={`mailto:${profile.socials.email}`}
-                class="text-accent hover:underline"
-              >
-                {profile.socials.email}
-              </a>
-            </p>
-          </div>
+          <SocialLinks
+            links={[
+              { name: 'GitHub', url: profile.socials.github, icon: 'github' },
+              { name: 'LinkedIn', url: profile.socials.linkedin, icon: 'linkedin' },
+              { name: 'XING', url: profile.socials.xing, icon: 'xing' },
+              { name: 'Email', url: `mailto:${profile.socials.email}`, icon: 'email' },
+            ]}
+          />
+          <p class="text-text-secondary font-mono text-sm mt-6">
+            {profile.socials.email}
+          </p>
         </section>
       </main>
 
