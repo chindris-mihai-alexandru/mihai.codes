@@ -1,10 +1,15 @@
 import { component$ } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
-import { getAllPosts } from '../../content/blog/posts';
+import { Link, routeLoader$ } from '@builder.io/qwik-city';
+import { getAllPosts, type BlogPost } from '../../lib/sanity';
 import { ThemeToggle } from '../../components/theme-toggle/theme-toggle';
 
+// Fetch posts at request time from Sanity
+export const usePosts = routeLoader$<BlogPost[]>(async () => {
+  return await getAllPosts();
+});
+
 export default component$(() => {
-  const posts = getAllPosts();
+  const posts = usePosts();
 
   return (
     <div class="min-h-screen p-8 md:p-16 max-w-4xl mx-auto">
@@ -31,34 +36,38 @@ export default component$(() => {
 
       <main>
         <div class="space-y-8">
-          {posts.map((post) => (
-            <article key={post.slug} class="modal-card p-6 rounded-lg group">
-              <Link href={`/blog/${post.slug}`} class="block">
-                <div class="flex justify-between items-start mb-2">
-                  <h2 class="text-xl font-bold group-hover:text-accent transition-colors">
-                    {post.title}
-                  </h2>
-                  <span class="text-sm font-mono text-text-secondary shrink-0 ml-4">
-                    {post.date}
-                  </span>
-                </div>
-                <p class="text-text-secondary mb-3">{post.description}</p>
-                <div class="flex items-center gap-4 text-sm">
-                  <span class="font-mono text-text-secondary">{post.readingTime}</span>
-                  <div class="flex gap-2">
-                    {post.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        class="px-2 py-1 bg-muted rounded text-xs font-mono text-text-secondary"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+          {posts.value.length === 0 ? (
+            <p class="text-text-secondary font-mono">No posts yet. Check back soon!</p>
+          ) : (
+            posts.value.map((post) => (
+              <article key={post.slug} class="modal-card p-6 rounded-lg group">
+                <Link href={`/blog/${post.slug}`} class="block">
+                  <div class="flex justify-between items-start mb-2">
+                    <h2 class="text-xl font-bold group-hover:text-accent transition-colors">
+                      {post.title}
+                    </h2>
+                    <span class="text-sm font-mono text-text-secondary shrink-0 ml-4">
+                      {post.date}
+                    </span>
                   </div>
-                </div>
-              </Link>
-            </article>
-          ))}
+                  <p class="text-text-secondary mb-3">{post.description}</p>
+                  <div class="flex items-center gap-4 text-sm">
+                    <span class="font-mono text-text-secondary">{post.readingTime}</span>
+                    <div class="flex gap-2">
+                      {post.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          class="px-2 py-1 bg-muted rounded text-xs font-mono text-text-secondary"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </Link>
+              </article>
+            ))
+          )}
         </div>
       </main>
 

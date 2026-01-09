@@ -1,11 +1,11 @@
 import { component$ } from '@builder.io/qwik';
 import { Link, routeLoader$, type DocumentHead } from '@builder.io/qwik-city';
-import { getPostBySlug, type BlogPost } from '../../../content/blog/posts';
+import { getPostBySlug, type BlogPost } from '../../../lib/sanity';
 import { ThemeToggle } from '../../../components/theme-toggle/theme-toggle';
 import { sanitizeHTML } from '../../../utils/sanitize';
 
-export const usePost = routeLoader$<BlogPost | null>(({ params, status }) => {
-  const post = getPostBySlug(params.slug);
+export const usePost = routeLoader$<BlogPost | null>(async ({ params, status }) => {
+  const post = await getPostBySlug(params.slug);
   if (!post) {
     status(404);
     return null;

@@ -45,5 +45,8 @@
     "vitest": "^4.0.16",
     "wrangler": "^4.57.0"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@sanity/client": "^7.14.0"
+  }
 }

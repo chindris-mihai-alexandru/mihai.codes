@@ -5,12 +5,12 @@
  * @see https://www.sitemaps.org/protocol.html
  */
 import type { RequestHandler } from '@builder.io/qwik-city';
-import { getAllPosts } from '../../content/blog/posts';
+import { getAllPosts } from '../../lib/sanity';
 
 const BASE_URL = 'https://mihai.codes';
 
-export const onGet: RequestHandler = ({ send }) => {
-  const posts = getAllPosts();
+export const onGet: RequestHandler = async ({ send }) => {
+  const posts = await getAllPosts();
   const now = new Date().toISOString().split('T')[0];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
