@@ -13,24 +13,28 @@ export const ThemeToggle = component$(() => {
   const buttonRef = useSignal<HTMLButtonElement>();
   
   // useVisibleTask$ runs client-side after the component is visible
-  // This is the correct Qwik pattern for client-side only code
+  // Using strategy: "document-ready" to attach handler as soon as document is ready
+  // This ensures the toggle is interactive immediately on page load
   // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(() => {
-    const btn = buttonRef.value;
-    const win = window as Window & { __toggleTheme?: () => void };
-    if (btn && typeof window !== 'undefined' && win.__toggleTheme) {
-      const toggleFn = win.__toggleTheme;
-      const handleClick = () => {
-        toggleFn();
-      };
-      btn.addEventListener('click', handleClick);
-      
-      // Cleanup on unmount
-      return () => {
-        btn.removeEventListener('click', handleClick);
-      };
-    }
-  });
+  useVisibleTask$(
+    () => {
+      const btn = buttonRef.value;
+      const win = window as Window & { __toggleTheme?: () => void };
+      if (btn && typeof window !== 'undefined' && win.__toggleTheme) {
+        const toggleFn = win.__toggleTheme;
+        const handleClick = () => {
+          toggleFn();
+        };
+        btn.addEventListener('click', handleClick);
+        
+        // Cleanup on unmount
+        return () => {
+          btn.removeEventListener('click', handleClick);
+        };
+      }
+    },
+    { strategy: 'document-ready' }
+  );
 
   return (
     <button
