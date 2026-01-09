@@ -173,9 +173,6 @@ export default component$(() => {
               { name: 'Email', url: `mailto:${profile.socials.email}`, icon: 'email' },
             ]}
           />
-          <p class="text-text-secondary font-mono text-sm mt-6">
-            {profile.socials.email}
-          </p>
         </section>
       </main>
 
