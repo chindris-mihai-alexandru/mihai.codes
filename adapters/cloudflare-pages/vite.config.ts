@@ -16,6 +16,7 @@ export default extendConfig(baseConfig, () => {
           include: ['/*'],
           exclude: ['/sitemap.xml', '/blog/*'],
           origin: 'https://mihai.codes',
+          sitemapOutFile: null, // Disable auto-generated sitemap - we have a dynamic one
         },
       }),
     ],
