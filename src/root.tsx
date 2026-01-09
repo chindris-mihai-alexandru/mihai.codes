@@ -44,6 +44,7 @@ export default component$(() => {
       <head>
         <meta charSet="utf-8" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="alternate" type="application/rss+xml" title="Mihai Chindris - Blog" href="https://mihai.codes/rss.xml" />
         {/* Prevent FOUC by setting theme before render */}
         <script dangerouslySetInnerHTML={themeScript} />
         <RouterHead />
