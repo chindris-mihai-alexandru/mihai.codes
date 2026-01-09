@@ -4,7 +4,7 @@ export const sanityClient = createClient({
   projectId: '76ahey7l',
   dataset: 'production',
   apiVersion: '2024-01-09', // Use today's date for latest API
-  useCdn: true, // Use CDN for faster reads (disable for real-time updates)
+  useCdn: false, // Disabled for real-time updates after content changes
 })
 
 // TypeScript interface matching our Sanity schema
