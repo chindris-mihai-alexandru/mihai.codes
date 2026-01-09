@@ -1,31 +1,47 @@
-import { component$ } from '@builder.io/qwik';
+import { component$, useVisibleTask$, useSignal } from '@builder.io/qwik';
 
 /**
  * Theme Toggle Button
  * 
- * This component renders a button that toggles between light and dark themes.
+ * Uses useVisibleTask$ to attach event listener after Qwik hydration.
+ * This is the Qwik-native way to run client-side only code.
  * 
- * IMPORTANT: For SSG compatibility, we use:
- * 1. dangerouslySetInnerHTML to render raw HTML (bypasses Qwik's event system)
- * 2. Inline onclick attribute that calls window.__toggleTheme() defined in root.tsx
- * 
- * This is the most reliable approach for SSG because:
- * - The onclick attribute works without any JavaScript initialization
- * - window.__toggleTheme is defined in the <head> script before the button renders
+ * The button is rendered server-side, but the click handler is attached
+ * client-side via useVisibleTask$ which runs after the component is visible.
  */
 export const ThemeToggle = component$(() => {
-  // Raw HTML with inline onclick - most reliable for SSG
-  const buttonHtml = `
+  const buttonRef = useSignal<HTMLButtonElement>();
+  
+  // useVisibleTask$ runs client-side after the component is visible
+  // This is the correct Qwik pattern for client-side only code
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(() => {
+    const btn = buttonRef.value;
+    const win = window as Window & { __toggleTheme?: () => void };
+    if (btn && typeof window !== 'undefined' && win.__toggleTheme) {
+      const toggleFn = win.__toggleTheme;
+      const handleClick = () => {
+        toggleFn();
+      };
+      btn.addEventListener('click', handleClick);
+      
+      // Cleanup on unmount
+      return () => {
+        btn.removeEventListener('click', handleClick);
+      };
+    }
+  });
+
+  return (
     <button
-      id="theme-toggle-btn"
-      onclick="window.__toggleTheme && window.__toggleTheme()"
+      ref={buttonRef}
       class="p-2 rounded-lg border border-border hover:border-accent transition-colors cursor-pointer"
       title="Toggle theme"
       aria-label="Toggle theme"
     >
-      <!-- Sun icon - shown in dark mode -->
+      {/* Sun icon - shown in dark mode */}
       <svg
-        class="w-5 h-5 hidden dark:block text-accent pointer-events-none"
+        class="w-5 h-5 hidden dark:block text-accent"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -37,9 +53,9 @@ export const ThemeToggle = component$(() => {
           d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
         />
       </svg>
-      <!-- Moon icon - shown in light mode -->
+      {/* Moon icon - shown in light mode */}
       <svg
-        class="w-5 h-5 block dark:hidden text-accent pointer-events-none"
+        class="w-5 h-5 block dark:hidden text-accent"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -52,7 +68,5 @@ export const ThemeToggle = component$(() => {
         />
       </svg>
     </button>
-  `;
-
-  return <div dangerouslySetInnerHTML={buttonHtml} />;
+  );
 });

@@ -1,7 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { Link, routeLoader$ } from '@builder.io/qwik-city';
 import { profile } from '../data/profile';
-import { ThemeToggle } from '../components/theme-toggle/theme-toggle';
 import { CredlyBadge, fetchCredlyBadge, type CredlyBadgeData } from '../components/credly-badge/credly-badge';
 import { LinkedInWidget } from '../components/linkedin-badge/linkedin-badge';
 import { GitHubWidget, type GitHubUser } from '../components/github-widget/github-widget';
@@ -32,10 +31,7 @@ export default component$(() => {
   const credlyBadge = useCredlyBadge();
   return (
     <div class="min-h-screen p-8 md:p-16 max-w-4xl mx-auto">
-      {/* Theme toggle - fixed position */}
-      <div class="fixed top-4 right-4 md:top-8 md:right-8 z-50">
-        <ThemeToggle />
-      </div>
+      {/* Theme toggle is now rendered in root.tsx outside of Qwik's router */}
 
       <header class="mb-16">
         <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tighter">

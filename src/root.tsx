@@ -2,12 +2,13 @@ import { component$ } from '@builder.io/qwik';
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
 import { RouterHead } from './components/router-head/router-head';
 import { ThemeProvider } from './context/theme';
+import { ThemeToggle } from './components/theme-toggle/theme-toggle';
 
 import './global.css';
 
-// Inline script for theme handling - works without Qwik hydration
-// This runs in <head> BEFORE body renders, preventing FOUC
-// The toggle button uses inline onclick="window.__toggleTheme()" to call this
+// Inline script for theme handling - runs in <head> BEFORE body renders
+// This prevents FOUC (Flash of Unstyled Content)
+// The toggle button's click handler is attached via useVisibleTask$ in ThemeToggle component
 const themeScript = `
 (function() {
   var STORAGE_KEY = 'mihai-codes-theme';
@@ -29,7 +30,7 @@ const themeScript = `
     document.documentElement.classList.add(t);
   };
   
-  // Toggle function - called by inline onclick on the theme toggle button
+  // Toggle function - called by the theme toggle button via useVisibleTask$
   window.__toggleTheme = function() {
     var newTheme = window.__theme === 'dark' ? 'light' : 'dark';
     window.__setTheme(newTheme);
@@ -49,6 +50,10 @@ export default component$(() => {
         <ServiceWorkerRegister />
       </head>
       <body lang="en">
+        {/* Theme toggle - uses useVisibleTask$ to attach click handler client-side */}
+        <div class="fixed top-4 right-4 md:top-8 md:right-8 z-50">
+          <ThemeToggle />
+        </div>
         <ThemeProvider>
           <RouterOutlet />
         </ThemeProvider>
