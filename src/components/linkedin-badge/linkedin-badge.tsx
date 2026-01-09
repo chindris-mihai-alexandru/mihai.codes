@@ -1,4 +1,5 @@
-import { component$, useVisibleTask$ } from '@builder.io/qwik';
+import { component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
+import { ThemeContext } from '../../context/theme';
 
 type BadgeSize = 'small' | 'medium' | 'large';
 
@@ -17,11 +18,14 @@ const BADGE_SIZES: Record<BadgeSize, { width: string; height: string }> = {
 
 export const LinkedInBadge = component$<LinkedInBadgeProps>(
   ({ profileId, size = 'medium' }) => {
+    const theme = useContext(ThemeContext);
     const dimensions = BADGE_SIZES[size];
 
     // Load LinkedIn badge script when component becomes visible
     // eslint-disable-next-line qwik/no-use-visible-task
-    useVisibleTask$(() => {
+    useVisibleTask$(({ track }) => {
+      track(() => theme.value);
+      
       // Check if script already loaded
       if (!document.querySelector('script[src*="platform.linkedin.com/badges"]')) {
         const script = document.createElement('script');
@@ -37,7 +41,7 @@ export const LinkedInBadge = component$<LinkedInBadgeProps>(
         class="badge-base LI-profile-badge"
         data-locale="en_US"
         data-size={size}
-        data-theme="dark"
+        data-theme={theme.value}
         data-type="HORIZONTAL"
         data-vanity={profileId}
         data-version="v1"

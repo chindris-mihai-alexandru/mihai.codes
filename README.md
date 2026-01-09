@@ -9,12 +9,14 @@ Personal portfolio and blog built with modern web technologies.
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Cloudflare Pages](https://img.shields.io/badge/Cloudflare_Pages-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://pages.cloudflare.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Sanity](https://img.shields.io/badge/Sanity-F03E2F?style=flat-square&logo=sanity&logoColor=white)](https://sanity.io)
 
 ## Features
 
 - **Instant Loading** - Qwik's resumability means near-zero JavaScript on initial load
 - **Dark/Light Theme** - System-aware with manual toggle, persisted to localStorage
-- **Blog** - Markdown-based posts with syntax highlighting
+- **Blog with CMS** - Content managed via Sanity Studio with Markdown support
+- **Dynamic Sitemap** - Auto-generated from Sanity content for SEO
 - **Edge Deployed** - Cloudflare Pages for global performance
 
 ## Tech Stack
@@ -23,8 +25,21 @@ Personal portfolio and blog built with modern web technologies.
 |-------|------------|
 | Framework | [Qwik](https://qwik.dev) + [Qwik City](https://qwik.dev/docs/qwikcity/) |
 | Styling | [Tailwind CSS](https://tailwindcss.com) |
+| CMS | [Sanity](https://sanity.io) |
 | Hosting | [Cloudflare Pages](https://pages.cloudflare.com) |
 | Language | [TypeScript](https://typescriptlang.org) |
+
+## Architecture
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  Sanity Studio  │────▶│   Sanity API    │◀────│   mihai.codes   │
+│  (Content CMS)  │     │   (Content DB)  │     │  (Qwik + CF)    │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+        │                                                │
+        ▼                                                ▼
+  mihai-codes.sanity.studio                        mihai.codes
+```
 
 ## Development
 
@@ -47,13 +62,18 @@ npm run serve
 ```
 src/
 ├── components/     # Reusable UI components
-├── content/        # Blog posts and content
 ├── context/        # Qwik context providers
 ├── data/           # Static data (profile, etc.)
+├── lib/            # Utilities (Sanity client, etc.)
 └── routes/         # File-based routing
     ├── index.tsx   # Home page
-    └── blog/       # Blog routes
+    ├── blog/       # Blog routes (fetches from Sanity)
+    └── sitemap.xml/# Dynamic sitemap
 ```
+
+## Related Repositories
+
+- **Sanity Studio**: [mihai-codes-studio](https://github.com/chindris-mihai-alexandru/mihai-codes-studio)
 
 ## Development Workflow
 
