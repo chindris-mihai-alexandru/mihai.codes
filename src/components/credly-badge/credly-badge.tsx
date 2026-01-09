@@ -15,27 +15,24 @@ interface CredlyBadgeProps {
 }
 
 /**
- * Credly Badge component
+ * Credly Badge component - Compact design
  * 
  * Displays a Credly badge using data fetched at build time (SSG).
  * The parent route uses routeLoader$ to fetch badge data from Credly's
  * public page and extracts the OG meta tags.
  * 
- * This approach works reliably on SSG because:
- * 1. Data is fetched server-side at build time (no CORS issues)
- * 2. Badge info is baked into the static HTML
- * 3. No client-side JavaScript required for display
+ * Compact style: Just the badge image, no text. Consistent with
+ * the minimalist social icons design.
  */
 export const CredlyBadge = component$<CredlyBadgeProps>(({ badge }) => {
   if (!badge) {
     return (
-      <div class="flex flex-col items-center p-4 text-text-secondary">
-        <div class="w-[120px] h-[120px] bg-surface rounded-lg flex items-center justify-center mb-3">
-          <svg class="w-12 h-12 text-text-secondary opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="p-3 rounded-lg border border-border bg-bg text-text-secondary">
+        <div class="w-20 h-20 flex items-center justify-center">
+          <svg class="w-10 h-10 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
           </svg>
         </div>
-        <p class="text-sm font-mono">Badge unavailable</p>
       </div>
     );
   }
@@ -45,24 +42,18 @@ export const CredlyBadge = component$<CredlyBadgeProps>(({ badge }) => {
       href={badge.badgeUrl}
       target="_blank"
       rel="noopener noreferrer"
-      class="flex flex-col items-center p-2 hover:opacity-90 transition-opacity group"
+      title={badge.title}
+      aria-label={badge.title}
+      class="p-2 rounded-lg border border-border bg-bg hover:border-accent transition-all duration-200 hover:-translate-y-0.5 block"
     >
       <img
         src={badge.imageUrl}
         alt={badge.title}
-        width={120}
-        height={120}
-        class="mb-3 group-hover:scale-105 transition-transform"
+        width={80}
+        height={80}
+        class="w-20 h-20"
         loading="lazy"
       />
-      <div class="text-center max-w-[180px]">
-        <p class="text-sm font-semibold text-text-primary leading-tight mb-1">
-          {badge.title}
-        </p>
-        <p class="text-xs text-text-secondary font-mono">
-          {badge.issuerName}
-        </p>
-      </div>
     </a>
   );
 });

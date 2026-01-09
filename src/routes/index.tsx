@@ -136,10 +136,9 @@ export default component$(() => {
 
         <section>
           <h2 class="text-2xl font-bold mb-6 border-b border-border pb-2">Credentials</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center sm:justify-items-start">
-            <div class="modal-card p-4 rounded-lg">
-              <CredlyBadge badge={credlyBadge.value} />
-            </div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <CredlyBadge badge={credlyBadge.value} />
+            {/* Add more badges here as you earn them */}
           </div>
           <p class="text-sm text-text-secondary mt-4 font-mono">
             View all credentials on{' '}
