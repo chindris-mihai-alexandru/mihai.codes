@@ -1,15 +1,29 @@
-import { component$, useContext } from '@builder.io/qwik';
+import { $, component$, useContext } from '@builder.io/qwik';
 import { ThemeContext } from '../../context/theme';
+
+declare global {
+  interface Window {
+    __theme?: string;
+    __setTheme?: (theme: string) => void;
+  }
+}
 
 export const ThemeToggle = component$(() => {
   const theme = useContext(ThemeContext);
 
+  const handleClick = $(() => {
+    const newTheme = theme.value === 'dark' ? 'light' : 'dark';
+    // Update Qwik context
+    theme.value = newTheme;
+    // Also call the global setter for immediate DOM update
+    if (typeof window !== 'undefined' && window.__setTheme) {
+      window.__setTheme(newTheme);
+    }
+  });
+
   return (
     <button
-      onClick$={() => {
-        // Simple toggle: dark <-> light
-        theme.value = theme.value === 'dark' ? 'light' : 'dark';
-      }}
+      onClick$={handleClick}
       class="p-2 rounded-lg border border-border hover:border-accent transition-colors"
       title={`Switch to ${theme.value === 'dark' ? 'light' : 'dark'} mode`}
       aria-label="Toggle theme"

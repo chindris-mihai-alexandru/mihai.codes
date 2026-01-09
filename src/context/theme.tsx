@@ -14,41 +14,48 @@ export const ThemeContext = createContextId<Signal<Theme>>('theme-context');
 
 const STORAGE_KEY = 'mihai-codes-theme';
 
+declare global {
+  interface Window {
+    __theme?: string;
+    __setTheme?: (theme: string) => void;
+  }
+}
+
 export const ThemeProvider = component$(() => {
   const theme = useSignal<Theme>('dark');
 
-  // Read theme from localStorage on mount (client-side only)
+  // Sync with the inline script's theme on hydration
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(
     () => {
-      const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-      if (stored && ['light', 'dark'].includes(stored)) {
-        theme.value = stored;
-      } else {
-        // Default to system preference on first visit
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        theme.value = prefersDark ? 'dark' : 'light';
+      // Read from window.__theme set by inline script, or localStorage
+      const currentTheme = (window.__theme as Theme) || 
+        (localStorage.getItem(STORAGE_KEY) as Theme) || 
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      
+      if (currentTheme !== theme.value) {
+        theme.value = currentTheme;
       }
-      applyTheme(theme.value);
     },
     { strategy: 'document-ready' }
   );
 
-  // Watch for theme changes and apply
+  // Watch for theme changes and apply to DOM
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(({ track }) => {
-    track(() => theme.value);
-    localStorage.setItem(STORAGE_KEY, theme.value);
-    applyTheme(theme.value);
+    const currentTheme = track(() => theme.value);
+    // Use the global setter if available
+    if (window.__setTheme) {
+      window.__setTheme(currentTheme);
+    } else {
+      // Fallback: apply directly
+      localStorage.setItem(STORAGE_KEY, currentTheme);
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(currentTheme);
+    }
   });
 
   useContextProvider(ThemeContext, theme);
 
   return <Slot />;
 });
-
-function applyTheme(theme: Theme) {
-  const root = document.documentElement;
-  root.classList.remove('light', 'dark');
-  root.classList.add(theme);
-}

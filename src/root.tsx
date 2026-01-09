@@ -5,58 +5,25 @@ import { ThemeProvider } from './context/theme';
 
 import './global.css';
 
-// Inline script to prevent FOUC and handle theme toggle (works without Qwik hydration)
+// Inline script ONLY for preventing FOUC - theme toggle handled by Qwik
 const themeScript = `
 (function() {
   var STORAGE_KEY = 'mihai-codes-theme';
   var stored = localStorage.getItem(STORAGE_KEY);
-  // Use stored value, or detect system preference on first visit
   var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   
-  function applyTheme(t) {
-    var root = document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(t);
-  }
-  
   // Apply theme immediately to prevent FOUC
-  applyTheme(theme);
+  document.documentElement.classList.remove('light', 'dark');
+  document.documentElement.classList.add(theme);
   
-  // Store current theme globally for toggle access
+  // Store for Qwik context to read
   window.__theme = theme;
   window.__setTheme = function(t) {
     window.__theme = t;
     localStorage.setItem(STORAGE_KEY, t);
-    applyTheme(t);
-    // Update button title
-    var btn = document.querySelector('[data-theme-toggle]');
-    if (btn) btn.title = 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' mode';
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(t);
   };
-  
-  // Attach click handler - use capturing phase to run before Qwik
-  function attachHandler() {
-    var btn = document.querySelector('[data-theme-toggle]');
-    if (btn && !btn.__themeHandlerAttached) {
-      btn.__themeHandlerAttached = true;
-      btn.title = 'Switch to ' + (window.__theme === 'dark' ? 'light' : 'dark') + ' mode';
-      btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        // Simple 2-way toggle: dark <-> light
-        window.__setTheme(window.__theme === 'dark' ? 'light' : 'dark');
-      }, true); // capture phase
-    }
-  }
-  
-  // Try multiple times to ensure button is found
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', attachHandler);
-  } else {
-    attachHandler();
-  }
-  // Also try after a short delay as backup
-  setTimeout(attachHandler, 100);
-  setTimeout(attachHandler, 500);
 })();
 `;
 

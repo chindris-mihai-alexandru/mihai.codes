@@ -18,23 +18,27 @@ interface GitHubUser {
 
 export const GitHubWidget = component$<GitHubWidgetProps>(({ username }) => {
   const userData = useSignal<GitHubUser | null>(null);
-  const isLoading = useSignal(true);
+  const hasLoaded = useSignal(false);
 
   // Fetch GitHub user data when component becomes visible
+  // Using 'document-ready' strategy to ensure it runs on SSG pages
   // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(async () => {
-    try {
-      const response = await fetch(`https://api.github.com/users/${username}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch GitHub profile');
+  useVisibleTask$(
+    async () => {
+      try {
+        const response = await fetch(`https://api.github.com/users/${username}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch GitHub profile');
+        }
+        userData.value = (await response.json()) as GitHubUser;
+      } catch {
+        // On error, userData stays null - fallback will show
+      } finally {
+        hasLoaded.value = true;
       }
-      userData.value = (await response.json()) as GitHubUser;
-    } catch {
-      // On error, userData stays null - fallback will show
-    } finally {
-      isLoading.value = false;
-    }
-  });
+    },
+    { strategy: 'document-ready' }
+  );
 
   // Single return with conditional rendering inside - required for Qwik reactivity
   return (
