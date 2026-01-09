@@ -69,17 +69,56 @@ export default component$(() => {
 
         <section>
           <h2 class="text-2xl font-bold mb-6 border-b border-border pb-2">Experience</h2>
-          <div class="space-y-8">
-            {profile.experience.map((role, i) => (
-              <div key={i} class="modal-card p-6 rounded-lg">
-                <div class="flex justify-between items-start mb-2">
-                  <h3 class="text-xl font-bold">{role.company}</h3>
-                  <span class="text-sm font-mono text-text-secondary">{role.date}</span>
-                </div>
-                <div class="text-accent font-mono text-sm mb-3">{role.role}</div>
-                <p class="text-text-secondary text-sm">{role.details}</p>
+          
+          {/* Company Header with Logo */}
+          <div class="modal-card p-6 rounded-lg">
+            <div class="flex items-center gap-4 mb-6">
+              <img 
+                src={profile.experience.logo} 
+                alt={profile.experience.company}
+                width={48}
+                height={48}
+                class="w-12 h-12 object-contain"
+                loading="lazy"
+                decoding="async"
+              />
+              <div>
+                <h3 class="text-xl font-bold">{profile.experience.company}</h3>
+                <span class="text-sm font-mono text-text-secondary">{profile.experience.totalDuration}</span>
               </div>
-            ))}
+            </div>
+            
+            {/* Vertical Timeline */}
+            <div class="relative pl-6 border-l-2 border-border">
+              {profile.experience.roles.map((role, i) => (
+                <div key={i} class="relative pb-8 last:pb-0">
+                  {/* Timeline dot */}
+                  <div class="absolute -left-[25px] top-1 w-3 h-3 rounded-full bg-accent border-2 border-bg"></div>
+                  
+                  {/* Role content */}
+                  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
+                    <h4 class="text-lg font-semibold">{role.title}</h4>
+                    <span class="text-xs font-mono text-text-secondary whitespace-nowrap">{role.date}</span>
+                  </div>
+                  <p class="text-text-secondary text-sm">{role.description}</p>
+                </div>
+              ))}
+            </div>
+            
+            {/* View on LinkedIn link */}
+            <div class="mt-6 pt-4 border-t border-border">
+              <a
+                href={profile.experience.linkedInUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-accent hover:underline font-mono text-sm inline-flex items-center gap-2"
+              >
+                View full experience on LinkedIn
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
           </div>
         </section>
 

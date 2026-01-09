@@ -30,36 +30,38 @@ export const profile = {
       details: "8.07 out of 10. Thesis focused on responsive web app for hometown library."
     }
   ],
-  experience: [
-    {
-      company: "Siemens",
-      role: "Application Support Specialist",
-      date: "Nov 2022 - Apr 2025",
-      location: "Cluj-Napoca, Romania",
-      details: "SiePortal support. Streamlining access to tools/resources. Integrated with SIOS and Industry Mall."
-    },
-    {
-      company: "Siemens",
-      role: "MS Azure Developer",
-      date: "Aug 2022 - Jan 2023",
-      location: "Cluj-Napoca, Romania",
-      details: "Integration tests, API testing with Postman/Newman, Azure DevOps."
-    },
-    {
-      company: "Siemens",
-      role: "MS Azure Developer Trainee",
-      date: "Mar 2022 - Aug 2022",
-      location: "Cluj-Napoca, Romania",
-      details: "Dynamics 365 mobile app development support. Azure cloud operations."
-    },
-    {
-      company: "Siemens",
-      role: "Application Support Specialist",
-      date: "Jul 2021 - Mar 2022",
-      location: "Cluj-Napoca, Romania",
-      details: "Saba Cloud LMS support. Incident management in Jira."
-    }
-  ],
+  experience: {
+    company: "Siemens",
+    logo: "/images/siemens-logo.png",
+    totalDuration: "3 yrs 10 mos",
+    linkedInUrl: "https://www.linkedin.com/in/mihai-chindris/details/experience/",
+    roles: [
+      {
+        title: "Application Support Specialist",
+        date: "Nov 2022 - Apr 2025",
+        duration: "2 yrs 6 mos",
+        description: "Managed SiePortal operations ensuring 99%+ uptime, resolved incidents via ITIL practices, and executed CI/CD deployments with GitLab."
+      },
+      {
+        title: "MS Azure Developer",
+        date: "Aug 2022 - Jan 2023",
+        duration: "6 mos",
+        description: "Built automated API testing workflows with Postman, Newman, and PowerShell in Azure DevOps, reducing manual testing effort by 60%."
+      },
+      {
+        title: "MS Azure Developer Trainee",
+        date: "Mar 2022 - Aug 2022",
+        duration: "6 mos",
+        description: "Supported Dynamics 365 mobile app development while mastering Azure fundamentals and cloud automation with PowerShell."
+      },
+      {
+        title: "Application Support Specialist",
+        date: "Jul 2021 - Mar 2022",
+        duration: "9 mos",
+        description: "Maintained Saba Cloud LMS for Siemens employees, managing incidents in Jira and ensuring platform stability."
+      }
+    ]
+  },
   skills: [
     "Product Management",
     "Software Engineering",
