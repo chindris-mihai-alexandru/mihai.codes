@@ -42,6 +42,11 @@ export default component$(() => {
         <ThemeProvider>
           <RouterOutlet />
         </ThemeProvider>
+        {/* Credly embed script - loads after body content, auto-finds badge elements */}
+        <script
+          async
+          src="https://cdn.credly.com/assets/utilities/embed.js"
+        />
       </body>
     </QwikCityProvider>
   );

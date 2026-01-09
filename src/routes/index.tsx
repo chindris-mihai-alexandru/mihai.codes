@@ -1,12 +1,28 @@
 import { component$ } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
+import { Link, routeLoader$ } from '@builder.io/qwik-city';
 import { profile } from '../data/profile';
 import { ThemeToggle } from '../components/theme-toggle/theme-toggle';
 import { CredlyBadge } from '../components/credly-badge/credly-badge';
 import { LinkedInBadge } from '../components/linkedin-badge/linkedin-badge';
-import { GitHubWidget } from '../components/github-widget/github-widget';
+import { GitHubWidget, type GitHubUser } from '../components/github-widget/github-widget';
+
+// Fetch GitHub data at build time (SSG) or request time (SSR)
+export const useGitHubData = routeLoader$<GitHubUser | null>(async () => {
+  try {
+    const response = await fetch('https://api.github.com/users/chindris-mihai-alexandru');
+    if (!response.ok) {
+      console.error('GitHub API error:', response.status);
+      return null;
+    }
+    return (await response.json()) as GitHubUser;
+  } catch (error) {
+    console.error('Failed to fetch GitHub data:', error);
+    return null;
+  }
+});
 
 export default component$(() => {
+  const githubData = useGitHubData();
   return (
     <div class="min-h-screen p-8 md:p-16 max-w-4xl mx-auto">
       {/* Theme toggle - fixed position */}
@@ -93,7 +109,7 @@ export default component$(() => {
           <h2 class="text-2xl font-bold mb-6 border-b border-border pb-2">Connect</h2>
           <div class="flex flex-wrap gap-8 items-start">
             <div class="modal-card p-4 rounded-lg">
-              <GitHubWidget username="chindris-mihai-alexandru" />
+              <GitHubWidget username="chindris-mihai-alexandru" userData={githubData.value} />
             </div>
             <div class="modal-card p-4 rounded-lg">
               <LinkedInBadge profileId="mihai-chindris" size="medium" />

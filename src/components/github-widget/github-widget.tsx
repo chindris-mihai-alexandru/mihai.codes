@@ -1,11 +1,13 @@
-import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { component$ } from '@builder.io/qwik';
 
 interface GitHubWidgetProps {
   /** GitHub username */
   username: string;
+  /** Pre-fetched user data (from routeLoader$) */
+  userData?: GitHubUser | null;
 }
 
-interface GitHubUser {
+export interface GitHubUser {
   login: string;
   name: string | null;
   avatar_url: string;
@@ -16,66 +18,49 @@ interface GitHubUser {
   following: number;
 }
 
-export const GitHubWidget = component$<GitHubWidgetProps>(({ username }) => {
-  const userData = useSignal<GitHubUser | null>(null);
-  const hasLoaded = useSignal(false);
-
-  // Fetch GitHub user data when component becomes visible
-  // Using 'document-ready' strategy to ensure it runs on SSG pages
-  // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(
-    async () => {
-      try {
-        const response = await fetch(`https://api.github.com/users/${username}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch GitHub profile');
-        }
-        userData.value = (await response.json()) as GitHubUser;
-      } catch {
-        // On error, userData stays null - fallback will show
-      } finally {
-        hasLoaded.value = true;
-      }
-    },
-    { strategy: 'document-ready' }
-  );
-
+/**
+ * GitHub Widget component
+ * 
+ * For SSG, pass userData from routeLoader$ so it's rendered at build time.
+ * If userData is not provided, shows a fallback link.
+ */
+export const GitHubWidget = component$<GitHubWidgetProps>(({ username, userData }) => {
   // Single return with conditional rendering inside - required for Qwik reactivity
   return (
     <div class="github-widget">
-      {userData.value ? (
+      {userData ? (
         // Expanded card with user data
         <a
-          href={userData.value.html_url}
+          href={userData.html_url}
           target="_blank"
           rel="noopener noreferrer"
           class="flex items-center gap-4 group"
         >
           <img
-            src={userData.value.avatar_url}
-            alt={userData.value.name || userData.value.login}
+            src={userData.avatar_url}
+            alt={userData.name || userData.login}
             width={64}
             height={64}
             class="rounded-full border-2 border-border group-hover:border-accent transition-colors"
           />
           <div>
             <div class="font-bold group-hover:text-accent transition-colors">
-              {userData.value.name || userData.value.login}
+              {userData.name || userData.login}
             </div>
-            <div class="text-sm text-text-secondary font-mono">@{userData.value.login}</div>
-            {userData.value.bio && (
+            <div class="text-sm text-text-secondary font-mono">@{userData.login}</div>
+            {userData.bio && (
               <div class="text-xs text-text-secondary mt-1 max-w-[200px] truncate">
-                {userData.value.bio}
+                {userData.bio}
               </div>
             )}
             <div class="flex gap-4 mt-2 text-xs text-text-secondary font-mono">
-              <span>{userData.value.public_repos} repos</span>
-              <span>{userData.value.followers} followers</span>
+              <span>{userData.public_repos} repos</span>
+              <span>{userData.followers} followers</span>
             </div>
           </div>
         </a>
       ) : (
-        // Fallback: simple link while loading or on error
+        // Fallback: simple link when no data available
         <a
           href={`https://github.com/${username}`}
           target="_blank"
