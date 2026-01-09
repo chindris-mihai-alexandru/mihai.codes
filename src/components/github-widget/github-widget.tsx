@@ -18,7 +18,7 @@ interface GitHubUser {
 
 export const GitHubWidget = component$<GitHubWidgetProps>(({ username }) => {
   const userData = useSignal<GitHubUser | null>(null);
-  const error = useSignal<string | null>(null);
+  const isLoading = useSignal(true);
 
   // Fetch GitHub user data when component becomes visible
   // eslint-disable-next-line qwik/no-use-visible-task
@@ -29,15 +29,49 @@ export const GitHubWidget = component$<GitHubWidgetProps>(({ username }) => {
         throw new Error('Failed to fetch GitHub profile');
       }
       userData.value = (await response.json()) as GitHubUser;
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Unknown error';
+    } catch {
+      // On error, userData stays null - fallback will show
+    } finally {
+      isLoading.value = false;
     }
   });
 
-  // Fallback link while loading or on error
-  if (error.value || !userData.value) {
-    return (
-      <div class="github-widget">
+  // Single return with conditional rendering inside - required for Qwik reactivity
+  return (
+    <div class="github-widget">
+      {userData.value ? (
+        // Expanded card with user data
+        <a
+          href={userData.value.html_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-4 group"
+        >
+          <img
+            src={userData.value.avatar_url}
+            alt={userData.value.name || userData.value.login}
+            width={64}
+            height={64}
+            class="rounded-full border-2 border-border group-hover:border-accent transition-colors"
+          />
+          <div>
+            <div class="font-bold group-hover:text-accent transition-colors">
+              {userData.value.name || userData.value.login}
+            </div>
+            <div class="text-sm text-text-secondary font-mono">@{userData.value.login}</div>
+            {userData.value.bio && (
+              <div class="text-xs text-text-secondary mt-1 max-w-[200px] truncate">
+                {userData.value.bio}
+              </div>
+            )}
+            <div class="flex gap-4 mt-2 text-xs text-text-secondary font-mono">
+              <span>{userData.value.public_repos} repos</span>
+              <span>{userData.value.followers} followers</span>
+            </div>
+          </div>
+        </a>
+      ) : (
+        // Fallback: simple link while loading or on error
         <a
           href={`https://github.com/${username}`}
           target="_blank"
@@ -49,41 +83,7 @@ export const GitHubWidget = component$<GitHubWidgetProps>(({ username }) => {
           </svg>
           <span>@{username}</span>
         </a>
-      </div>
-    );
-  }
-
-  return (
-    <div class="github-widget">
-      <a
-        href={userData.value.html_url}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="flex items-center gap-4 group"
-      >
-        <img
-          src={userData.value.avatar_url}
-          alt={userData.value.name || userData.value.login}
-          width={64}
-          height={64}
-          class="rounded-full border-2 border-border group-hover:border-accent transition-colors"
-        />
-        <div>
-          <div class="font-bold group-hover:text-accent transition-colors">
-            {userData.value.name || userData.value.login}
-          </div>
-          <div class="text-sm text-text-secondary font-mono">@{userData.value.login}</div>
-          {userData.value.bio && (
-            <div class="text-xs text-text-secondary mt-1 max-w-[200px] truncate">
-              {userData.value.bio}
-            </div>
-          )}
-          <div class="flex gap-4 mt-2 text-xs text-text-secondary font-mono">
-            <span>{userData.value.public_repos} repos</span>
-            <span>{userData.value.followers} followers</span>
-          </div>
-        </div>
-      </a>
+      )}
     </div>
   );
 });
