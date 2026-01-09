@@ -29,20 +29,11 @@ const themeScript = `
     document.documentElement.classList.add(t);
   };
   
-  // Toggle function
+  // Toggle function - called by inline onclick on the theme toggle button
   window.__toggleTheme = function() {
     var newTheme = window.__theme === 'dark' ? 'light' : 'dark';
     window.__setTheme(newTheme);
   };
-  
-  // Event delegation for theme toggle button
-  // This works because the listener is on document, not the button itself
-  // So it works even when the button is rendered later in SSG HTML
-  document.addEventListener('click', function(e) {
-    if (e.target.closest('#theme-toggle-btn')) {
-      window.__toggleTheme();
-    }
-  });
 })();
 `;
 
@@ -61,11 +52,6 @@ export default component$(() => {
         <ThemeProvider>
           <RouterOutlet />
         </ThemeProvider>
-        {/* LinkedIn embed script - auto-finds badge elements after page load */}
-        <script
-          async
-          src="https://platform.linkedin.com/badges/js/profile.js"
-        />
       </body>
     </QwikCityProvider>
   );
