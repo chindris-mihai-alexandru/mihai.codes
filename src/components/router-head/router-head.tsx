@@ -23,7 +23,7 @@ export const RouterHead = component$(() => {
       ))}
 
       {head.styles.map((s, i) => (
-        <style key={s.key ?? `style-${i}`} {...s.props} dangerouslySetInnerHTML={s.style} />
+        <style key={s.key ?? `style-${i}`} dangerouslySetInnerHTML={s.style} />
       ))}
     </>
   );
