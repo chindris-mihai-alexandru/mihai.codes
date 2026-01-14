@@ -4,10 +4,6 @@ import { profile } from '../../data/profile';
 
 export const onGet: RequestHandler = async ({ send }) => {
   const posts = await getAllPosts();
-  
-  const blogSection = posts.map(post => 
-    `- [${post.title}](/blog/${post.slug}): ${post.description}${post.tags.length ? ` Tags: ${post.tags.join(', ')}` : ''}`
-  ).join('\n');
 
   const projectsSection = profile.projects.map(p => 
     `- [${p.name}](${p.url}): ${p.role} - ${p.description}`
