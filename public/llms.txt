@@ -1,80 +1,92 @@
 # mihai.codes
 
-> Personal portfolio and blog of Mihai Chindris - Aspiring Product Manager, Software Engineering student at Quantic, and open-source contributor. Built with Qwik, Tailwind CSS, and Cloudflare Pages.
+> Personal portfolio and blog of Mihai Chindris - Cloud Engineer & Full-Stack Developer. Built with Qwik, Tailwind CSS, and Cloudflare Pages.
+> Last updated: 2026-01-14
+
+## Contact
+- Email: hello@mihai.codes
+- LinkedIn: https://www.linkedin.com/in/mihai-chindris
+- GitHub: https://github.com/chindris-mihai-alexandru
+
+## Pages
+
+### Home
+URL: https://mihai.codes
+Portfolio showcasing professional experience, technical projects, certifications, and blog. Features dark/light theme with instant loading via Qwik's resumability.
+
+### Blog
+URL: https://mihai.codes/blog
+Technical articles on cloud engineering, AWS, DevOps, and building in public. All posts managed via Sanity CMS with full markdown support.
+
+### AWS Bedrock + Anthropic Claude: The Complete Troubleshooting Guide
+URL: https://mihai.codes/blog/aws-bedrock-anthropic-troubleshooting
+Three undocumented gotchas that will save you hours of debugging when setting up Claude models on AWS Bedrock. | Tags: aws, bedrock, anthropic, cloud
+
+### Building AI Agents with OpenCode and Free LLMs
+URL: https://mihai.codes/blog/building-ai-agents-with-opencode
+How to set up an autonomous AI coding agent using OpenCode, OpenRouter, and completely free language models. | Tags: ai, opencode, agents, cloud
+
+### Why I Chose Qwik Over Next.js
+URL: https://mihai.codes/blog/why-qwik
+A deep dive into resumability, hydration, and why Qwik's approach to JavaScript is revolutionary. | Tags: qwik, javascript, frameworks
 
 ## About Mihai Chindris
 
 Mihai is a software professional based in Maramures, Romania with 3+ years at Siemens spanning Application Support, Azure Development, and cloud operations. Currently pursuing an M.S. in Software Engineering at Quantic School of Business & Technology with focus on AI, machine learning, and cloud architectures.
 
-### Contact
-- Email: hello@mihai.codes
-- LinkedIn: https://www.linkedin.com/in/mihai-chindris
-- GitHub: https://github.com/chindris-mihai-alexandru
+**Location**: Maramures, Romania
 
-## Blog Posts
+### Professional Experience
 
-Technical articles on engineering, cloud computing, and building in public.
+**Siemens** (3+ years)
 
-- [AWS Bedrock + Anthropic Claude: The Complete Troubleshooting Guide](/blog/aws-bedrock-anthropic-troubleshooting): Three undocumented gotchas that will save you hours of debugging when setting up Claude models on AWS Bedrock. Tags: aws, bedrock, anthropic, cloud
-- [Building AI Agents with OpenCode and Free LLMs](/blog/building-ai-agents-with-opencode): How to set up an autonomous AI coding agent using OpenCode, OpenRouter, and completely free language models. Tags: ai, opencode, agents, cloud
-- [Why I Chose Qwik Over Next.js](/blog/why-qwik): A deep dive into resumability, hydration, and why Qwik's approach to JavaScript is revolutionary. Tags: qwik, javascript, frameworks
-- [Hello, World!](/blog/hello-world): Welcome to my corner of the internet. Here's what I'm building and why. Tags: personal, meta
+- **Application Support Engineer** (2021-2022): Provided technical support for enterprise applications, troubleshooting complex issues and ensuring system reliability.
+- **Azure Developer** (2022-2023): Developed and maintained cloud-based solutions on Microsoft Azure, focusing on scalability and performance.
+- **Cloud Operations** (2023-Present): Managing cloud infrastructure, implementing DevOps practices, and optimizing cloud resource utilization.
+
+### Education
+
+- **Quantic School of Business & Technology** - M.S. Software Engineering (2024-Present): Focus on AI, machine learning, and cloud architectures.
+- **Technical University** - B.S. Computer Science (2018-2021): Foundation in software development and computer systems.
+
+### Technical Skills
+
+AWS, Azure, TypeScript, React, Qwik, Node.js, Python, Docker, Kubernetes, Terraform, CI/CD, DevOps, Cloud Architecture, Microservices, API Design, Database Design, Git, Agile
+
+### Certifications
+
+- AWS Certified Solutions Architect - Associate
+- Microsoft Azure Developer Associate
+- Certified Kubernetes Administrator (CKA)
 
 ## Projects
 
-- [EasyParkPlus](https://github.com/heshamsakr/EasyParkPlus-Refactor): Enterprise Parking & EV Charging Architecture - Domain-Driven Design and microservices for scalable multi-facility parking systems
-- [Cafe Fausse](https://github.com/chindris-mihai-alexandru/cafe-fausse): Full-Stack Restaurant Web Application - Intelligent reservation engine with dynamic table allotment
-- [Lily's Florist Shop](https://www.figma.com/design/cDdidMI5ehr2Lgp7htOpar/Lily-s-Florist-Shop-Mockup-Wireframes): Design & Requirements - User stories, journey mapping, and Figma wireframes
-
-## Technical Skills
-
-Product Management, Software Engineering, Azure, API Integration, Cloud Technologies, Observability, User Experience Design, Agile Methodologies, Open Source Contribution
-
-## Certifications
-
-- AWS Academy Cloud Foundations
-- ITIL Foundation 4 First Look
-- Azure Essential Training for Developers
-- Google Digital Marketing Fundamentals
+- [mihai.codes](https://mihai.codes): Personal Portfolio & Blog - Portfolio and technical blog built with Qwik, Tailwind CSS, and Sanity CMS. Features instant loading, dark/light theme, and edge deployment on Cloudflare Pages.
+- [OpenCode Agent](https://github.com/chindris-mihai-alexandru/opencode-agent): AI Coding Assistant - Autonomous AI agent for code generation and refactoring using OpenCode and free LLMs via OpenRouter.
+- [AWS Bedrock Toolkit](https://github.com/chindris-mihai-alexandru/bedrock-toolkit): AWS Bedrock Utilities - Collection of utilities and examples for working with AWS Bedrock and Anthropic Claude models.
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Qwik + Qwik City |
-| Styling | Tailwind CSS |
-| CMS | Sanity (headless) |
-| Hosting | Cloudflare Pages (edge) |
-| Language | TypeScript |
+- **Framework**: Qwik + Qwik City (resumability, zero hydration)
+- **Styling**: Tailwind CSS with dark/light theme
+- **CMS**: Sanity (headless, GROQ queries)
+- **Hosting**: Cloudflare Pages (edge deployment)
+- **Language**: TypeScript
 
-### Architecture
+## Repository
 
-```
-Sanity Studio ──> Sanity API <── mihai.codes (Qwik + CF)
-```
-
-## Repository Structure
-
-```
-src/
-├── components/     # Reusable UI components (theme-toggle, social-links, etc.)
-├── context/        # Qwik context providers (theme)
-├── data/           # Static data (profile.ts)
-├── lib/            # Utilities (Sanity client)
-├── utils/          # Helpers (sanitize, etc.)
-└── routes/         # File-based routing
-    ├── index.tsx   # Home page
-    ├── blog/       # Blog routes (fetches from Sanity)
-    ├── sitemap.xml/# Dynamic sitemap
-    └── rss.xml/    # RSS feed
-```
-
-## Related
-
+- Main Site: https://github.com/chindris-mihai-alexandru/mihai.codes
 - Sanity Studio: https://github.com/chindris-mihai-alexandru/mihai-codes-studio
 - Live Site: https://mihai.codes
+- Studio: https://mihai-codes.sanity.studio
 - Sanity Project ID: 76ahey7l
-- GitHub: https://github.com/chindris-mihai-alexandru/mihai.codes
+
+## Crawling Rules
+
+Disallow: /api/
+Disallow: /_astro/
+Disallow: /admin
+Disallow: /private
 
 ## License
 

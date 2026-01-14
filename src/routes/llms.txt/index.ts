@@ -16,73 +16,77 @@ export const onGet: RequestHandler = async ({ send }) => {
   const llmsTxt = `# mihai.codes
 
 > Personal portfolio and blog of ${profile.name} - ${profile.tagline}. Built with Qwik, Tailwind CSS, and Cloudflare Pages.
+> Last updated: ${new Date().toISOString().split('T')[0]}
+
+## Contact
+- Email: ${profile.socials.email}
+- LinkedIn: ${profile.socials.linkedin}
+- GitHub: ${profile.socials.github}
+
+## Pages
+
+### Home
+URL: https://mihai.codes
+Portfolio showcasing professional experience, technical projects, certifications, and blog. Features dark/light theme with instant loading via Qwik's resumability.
+
+### Blog
+URL: https://mihai.codes/blog
+Technical articles on cloud engineering, AWS, DevOps, and building in public. All posts managed via Sanity CMS with full markdown support.
+
+${posts.map(post => `
+### ${post.title}
+URL: https://mihai.codes/blog/${post.slug}
+${post.description}${post.tags.length ? ` | Tags: ${post.tags.join(', ')}` : ''}`).join('\n')}
 
 ## About ${profile.name}
 
 ${profile.summary}
 
-### Contact
-- Email: ${profile.socials.email}
-- LinkedIn: ${profile.socials.linkedin}
-- GitHub: ${profile.socials.github}
+**Location**: ${profile.location}
 
-## Blog Posts
-
-Technical articles on engineering, cloud computing, and building in public.
-
-${blogSection}
-
-## Projects
-
-${projectsSection}
-
-## Technical Skills
-
-${profile.skills.join(', ')}
-
-## Certifications
-
-${profile.certifications.map(c => `- ${c}`).join('\n')}
-
-## Experience
+### Professional Experience
 
 **${profile.experience.company}** (${profile.experience.totalDuration})
 
 ${profile.experience.roles.map(r => `- **${r.title}** (${r.date}): ${r.description}`).join('\n')}
 
-## Education
+### Education
 
 ${profile.education.map(e => `- **${e.school}** - ${e.degree} (${e.date}): ${e.details}`).join('\n')}
 
+### Technical Skills
+
+${profile.skills.join(', ')}
+
+### Certifications
+
+${profile.certifications.map(c => `- ${c}`).join('\n')}
+
+## Projects
+
+${projectsSection}
+
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Qwik + Qwik City |
-| Styling | Tailwind CSS |
-| CMS | Sanity (headless) |
-| Hosting | Cloudflare Pages (edge) |
-| Language | TypeScript |
+- **Framework**: Qwik + Qwik City (resumability, zero hydration)
+- **Styling**: Tailwind CSS with dark/light theme
+- **CMS**: Sanity (headless, GROQ queries)
+- **Hosting**: Cloudflare Pages (edge deployment)
+- **Language**: TypeScript
 
-## Repository Structure
+## Repository
 
-\`\`\`
-src/
-├── components/     # Reusable UI components
-├── context/        # Qwik context providers
-├── data/           # Static data (profile.ts)
-├── lib/            # Utilities (Sanity client)
-└── routes/         # File-based routing
-    ├── index.tsx   # Home page
-    ├── blog/       # Blog routes
-    └── llms.txt/   # This file
-\`\`\`
-
-## Related
-
+- Main Site: https://github.com/chindris-mihai-alexandru/mihai.codes
 - Sanity Studio: https://github.com/chindris-mihai-alexandru/mihai-codes-studio
 - Live Site: https://mihai.codes
-- GitHub: https://github.com/chindris-mihai-alexandru/mihai.codes
+- Studio: https://mihai-codes.sanity.studio
+
+## Crawling Rules
+
+Disallow: /api/
+Disallow: /_astro/
+Disallow: /admin
+Disallow: /private
 
 ## License
 
