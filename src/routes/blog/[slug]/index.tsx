@@ -1,6 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { Link, routeLoader$, type DocumentHead } from '@builder.io/qwik-city';
-import { getPostBySlug, type BlogPost } from '../../../lib/sanity';
+import { getPostBySlug, getAllPosts, type BlogPost } from '../../../lib/sanity';
 import { ThemeToggle } from '../../../components/theme-toggle/theme-toggle';
 import { sanitizeHTML } from '../../../utils/sanitize';
 
@@ -11,6 +11,24 @@ export const usePost = routeLoader$<BlogPost | null>(async ({ params, status }) 
     return null;
   }
   return post;
+});
+
+export const useRelatedPosts = routeLoader$<BlogPost[]>(async ({ params }) => {
+  const currentPost = await getPostBySlug(params.slug);
+  if (!currentPost) return [];
+  
+  const allPosts = await getAllPosts();
+  
+  // Find posts with matching tags
+  return allPosts
+    .filter(p => p.slug !== params.slug)
+    .map(p => ({
+      ...p,
+      matchScore: p.tags.filter(tag => currentPost.tags.includes(tag)).length
+    }))
+    .filter(p => p.matchScore > 0)
+    .sort((a, b) => b.matchScore - a.matchScore)
+    .slice(0, 3);
 });
 
 /**
@@ -59,6 +77,7 @@ function renderMarkdown(content: string): string {
 
 export default component$(() => {
   const post = usePost();
+  const relatedPosts = useRelatedPosts();
 
   if (!post.value) {
     return (
@@ -125,6 +144,35 @@ export default component$(() => {
         />
       </article>
 
+      {/* Related posts */}
+      {relatedPosts.value.length > 0 && (
+        <section class="mt-16 pt-8 border-t border-border">
+          <h2 class="text-2xl font-bold mb-6">Related Posts</h2>
+          <div class="space-y-4">
+            {relatedPosts.value.map((relatedPost) => (
+              <article key={relatedPost.slug} class="modal-card card-border-reveal p-4 rounded-lg group">
+                <Link href={`/blog/${relatedPost.slug}`} class="block">
+                  <h3 class="text-lg font-bold group-hover:text-accent transition-colors mb-2">
+                    {relatedPost.title}
+                  </h3>
+                  <p class="text-sm text-text-secondary mb-2">{relatedPost.description}</p>
+                  <div class="flex gap-2">
+                    {relatedPost.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        class="px-2 py-1 bg-muted rounded text-xs font-mono text-text-secondary"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </Link>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       <footer class="mt-24 pt-8 border-t border-border text-text-secondary text-sm font-mono text-center">
         <p class="text-text-primary font-semibold">mihai.codes</p>
         <p class="mt-2">
@@ -136,6 +184,11 @@ export default component$(() => {
           >
             Source on GitHub
           </a>
+        </p>
+        <p class="mt-2">
+          <a href="/llms.txt" class="text-accent hover:underline">llms.txt</a>
+          {' · '}
+          <a href="/rss.xml" class="text-accent hover:underline">RSS</a>
         </p>
         <p class="mt-2">&copy; {new Date().getFullYear()} Mihai Chindriș</p>
       </footer>
