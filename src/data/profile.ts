@@ -82,6 +82,13 @@ export const profile = {
   ],
   projects: [
     {
+      name: "opencode-puter-auth",
+      role: "OpenCode AI Provider Plugin",
+      date: "Jan 2026",
+      description: "OAuth plugin enabling OpenCode to access 500+ AI models via Puter.com, including Claude Opus 4.5, GPT-5, and Gemini. Inspired by NoeFabris's popular opencode-antigravity-auth plugin. Features automatic model fallback, account rotation, and streaming support.",
+      url: "https://github.com/Mihai-Codes/opencode-puter-auth"
+    },
+    {
       name: "EasyParkPlus",
       role: "Enterprise Parking & EV Charging Architecture",
       date: "Oct 2025",
