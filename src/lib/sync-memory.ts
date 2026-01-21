@@ -48,5 +48,9 @@ export async function syncMemoryBank() {
     console.log('✅ Memory bank synced successfully');
   } catch (error) {
     console.error('❌ Failed to sync memory bank:', error);
+    process.exit(1);
   }
 }
+
+// Run when executed directly
+syncMemoryBank();

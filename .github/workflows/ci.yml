@@ -83,3 +83,29 @@ jobs:
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+  sync-memory:
+    name: Sync to Hindsight Memory
+    needs: deploy
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Sync memory bank
+        run: npm run sync-memory
+        env:
+          HINDSIGHT_API_URL: ${{ secrets.HINDSIGHT_API_URL }}
+          VITE_SANITY_PROJECT_ID: 76ahey7l
+          VITE_SANITY_DATASET: production

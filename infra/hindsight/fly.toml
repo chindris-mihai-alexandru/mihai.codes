@@ -1,0 +1,39 @@
+# Hindsight API Server for mihai.codes
+# Uses external PostgreSQL (Railway) for smaller image size
+#
+# Deploy: flyctl deploy
+# Docs: https://hindsight.vectorize.io/developer/installation
+
+app = 'hindsight-mihai'
+primary_region = 'ams'
+
+[build]
+  # Use the smaller API-only image (requires external PostgreSQL)
+  image = 'ghcr.io/vectorize-io/hindsight-api:0.3'
+
+[env]
+  HINDSIGHT_API_LLM_PROVIDER = 'groq'
+  # Use Jina AI for embeddings (free tier, OpenAI-compatible API)
+  HINDSIGHT_API_EMBEDDINGS_PROVIDER = 'openai'
+  HINDSIGHT_API_EMBEDDINGS_OPENAI_BASE_URL = 'https://api.jina.ai/v1'
+  HINDSIGHT_API_EMBEDDINGS_OPENAI_MODEL = 'jina-embeddings-v3'
+  # Use RRF instead of local reranker (no ML model needed)
+  HINDSIGHT_API_RERANKER_PROVIDER = 'rrf'
+  # Skip LLM verification for faster startup
+  HINDSIGHT_API_SKIP_LLM_VERIFICATION = 'true'
+  # Lazy load models to reduce memory usage
+  HINDSIGHT_API_LAZY_RERANKER = 'true'
+  # Database URL and API keys are set via secrets
+
+[http_service]
+  internal_port = 8888
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
