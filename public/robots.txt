@@ -1,5 +1,5 @@
 # robots.txt for mihai.codes
-# https://developers.google.com/search/docs/crawling-indexing/robots/intro
+# https://developers.google.com/search/docs/crawling-indexing/robots-intro
 
 User-agent: *
 Allow: /
@@ -18,3 +18,6 @@ Disallow: /wp-content/
 Disallow: /wp-includes/
 Disallow: /.env
 Disallow: /config/
+
+# Hide llms.txt from search engines
+Disallow: /llms.txt
