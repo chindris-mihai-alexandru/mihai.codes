@@ -1,11 +1,10 @@
 import { component$ } from '@builder.io/qwik';
 import { Link, routeLoader$, type DocumentHead } from '@builder.io/qwik-city';
-import { getPostBySlug, getAllPosts, type BlogPost } from '../../../lib/sanity';
+import { getPostBySlug, type BlogPost } from '../../../content/blog/posts';
 import { ThemeToggle } from '../../../components/theme-toggle/theme-toggle';
-import { sanitizeHTML } from '../../../utils/sanitize';
 
-export const usePost = routeLoader$<BlogPost | null>(async ({ params, status }) => {
-  const post = await getPostBySlug(params.slug);
+export const usePost = routeLoader$<BlogPost | null>(({ params, status }) => {
+  const post = getPostBySlug(params.slug);
   if (!post) {
     status(404);
     return null;
@@ -13,30 +12,9 @@ export const usePost = routeLoader$<BlogPost | null>(async ({ params, status }) 
   return post;
 });
 
-export const useRelatedPosts = routeLoader$<BlogPost[]>(async ({ params }) => {
-  const currentPost = await getPostBySlug(params.slug);
-  if (!currentPost) return [];
-  
-  const allPosts = await getAllPosts();
-  
-  // Find posts with matching tags
-  return allPosts
-    .filter(p => p.slug !== params.slug)
-    .map(p => ({
-      ...p,
-      matchScore: p.tags.filter(tag => currentPost.tags.includes(tag)).length
-    }))
-    .filter(p => p.matchScore > 0)
-    .sort((a, b) => b.matchScore - a.matchScore)
-    .slice(0, 3);
-});
-
-/**
- * Simple markdown-to-html converter for basic formatting
- * Output is sanitized to prevent XSS attacks
- */
+// Simple markdown-to-html converter for basic formatting
 function renderMarkdown(content: string): string {
-  const rawHtml = content
+  return content
     // Headers
     .replace(/^### (.*$)/gim, '<h3 class="text-xl font-bold mt-8 mb-4">$1</h3>')
     .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold mt-10 mb-4 border-b border-border pb-2">$1</h2>')
@@ -52,7 +30,7 @@ function renderMarkdown(content: string): string {
       return `<pre class="bg-muted p-4 rounded-lg overflow-x-auto my-6"><code class="font-mono text-sm">${code.trim()}</code></pre>`;
     })
     // Links
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-accent hover:underline" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-accent hover:underline" target="_blank">$1</a>')
     // Lists
     .replace(/^- (.*$)/gim, '<li class="ml-4">$1</li>')
     .replace(/^(\d+)\. (.*$)/gim, '<li class="ml-4 list-decimal">$2</li>')
@@ -70,14 +48,10 @@ function renderMarkdown(content: string): string {
       return `<p class="text-text-secondary leading-relaxed mb-4">${block}</p>`;
     })
     .join('\n');
-
-  // CRITICAL: Sanitize HTML to prevent XSS attacks
-  return sanitizeHTML(rawHtml);
 }
 
 export default component$(() => {
   const post = usePost();
-  const relatedPosts = useRelatedPosts();
 
   if (!post.value) {
     return (
@@ -144,63 +118,9 @@ export default component$(() => {
         />
       </article>
 
-      {/* Related posts */}
-      {relatedPosts.value.length > 0 && (
-        <section class="mt-16 pt-8 border-t border-border">
-          <h2 class="text-2xl font-bold mb-6">Related Posts</h2>
-          <div class="space-y-4">
-            {relatedPosts.value.map((relatedPost) => (
-              <article key={relatedPost.slug} class="modal-card card-border-reveal p-4 rounded-lg group">
-                <Link href={`/blog/${relatedPost.slug}`} class="block">
-                  <h3 class="text-lg font-bold group-hover:text-accent transition-colors mb-2">
-                    {relatedPost.title}
-                  </h3>
-                  <p class="text-sm text-text-secondary mb-2">{relatedPost.description}</p>
-                  <div class="flex gap-2">
-                    {relatedPost.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        class="px-2 py-1 bg-muted rounded text-xs font-mono text-text-secondary"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </Link>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <footer class="mt-24 pt-8 border-t border-border text-text-secondary text-sm font-mono text-center">
-        <p class="text-text-primary font-semibold">mihai.codes</p>
-        <p class="mt-2">&copy; {new Date().getFullYear()} Mihai Chindriș</p>
-        <p class="mt-2">
-          Built with Qwik · Deployed on Cloudflare Pages ·{' '}
-          <a
-            href="https://github.com/chindris-mihai-alexandru/mihai.codes"
-            target="_blank"
-            class="text-accent hover:underline"
-          >
-            Source on GitHub
-          </a>
-          {' · '}
-          <a href="/rss.xml" class="text-accent hover:underline">RSS</a>
-        </p>
-        <p class="mt-2">
-          <a 
-            href="https://github.com/chindris-mihai-alexandru/mihai.codes"
-            target="_blank"
-            class="inline-block"
-          >
-            <img 
-              src="/images/github/GitHub_Logo.png" 
-              alt="GitHub" 
-              class="h-4 w-auto"
-            />
-          </a>
-        </p>
+      <footer class="mt-24 pt-8 border-t border-border text-center text-text-secondary text-sm font-mono">
+        <p>Built with Qwik, ElectricSQL & AG-UI</p>
+        <p class="mt-2">&copy; 2026 Mihai Chindriș</p>
       </footer>
     </div>
   );
@@ -213,32 +133,6 @@ export const head: DocumentHead = ({ resolveValue }) => {
       title: 'Post not found | Mihai Chindriș',
     };
   }
-
-  // JSON-LD structured data for rich snippets
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title,
-    description: post.description,
-    datePublished: post.date,
-    dateModified: post.date,
-    author: {
-      '@type': 'Person',
-      name: 'Mihai Chindriș',
-      url: 'https://mihai.codes',
-    },
-    publisher: {
-      '@type': 'Person',
-      name: 'Mihai Chindriș',
-      url: 'https://mihai.codes',
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `https://mihai.codes/blog/${post.slug}`,
-    },
-    keywords: post.tags.join(', '),
-  };
-
   return {
     title: `${post.title} | Mihai Chindriș`,
     meta: [
@@ -254,41 +148,11 @@ export const head: DocumentHead = ({ resolveValue }) => {
         property: 'og:description',
         content: post.description,
       },
-      {
-        property: 'og:type',
-        content: 'article',
-      },
-      {
-        property: 'og:url',
-        content: `https://mihai.codes/blog/${post.slug}`,
-      },
-      {
-        property: 'article:published_time',
-        content: post.date,
-      },
-      {
-        property: 'article:author',
-        content: 'Mihai Chindriș',
-      },
-      {
-        name: 'twitter:card',
-        content: 'summary',
-      },
-      {
-        name: 'twitter:title',
-        content: post.title,
-      },
-      {
-        name: 'twitter:description',
-        content: post.description,
-      },
     ],
-    scripts: [
+    links: [
       {
-        script: JSON.stringify(jsonLd),
-        props: {
-          type: 'application/ld+json',
-        },
+        rel: 'author',
+        href: 'https://mastodon.social/@mihai_chindris',
       },
     ],
   };
