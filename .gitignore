@@ -39,3 +39,4 @@ _private/
 *.log
 npm-debug.log*
 coverage/
+ROADMAP.md
