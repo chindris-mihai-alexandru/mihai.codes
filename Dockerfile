@@ -1,3 +1,8 @@
+# Labels for GitHub Container Registry
+LABEL org.opencontainers.image.source="https://github.com/Mihai-Codes/mihai.codes"
+LABEL org.opencontainers.image.description="Personal portfolio & blog | Qwik + Tailwind CSS + Cloudflare Pages"
+LABEL org.opencontainers.image.licenses="MIT"
+
 # Build stage
 FROM node:20-alpine AS builder
 
